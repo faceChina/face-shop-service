@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjlp.face.shop.mapper.MemberMapper" >
+  <resultMap id="BaseResultMap" type="com.zjlp.face.shop.domain.Member" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="ADMIN_ID" property="adminId" jdbcType="BIGINT" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="CONSUMPTION_AMOUT" property="consumptionAmout" jdbcType="BIGINT" />
+    <result column="DISCOUNT" property="discount" jdbcType="INTEGER" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ADMIN_ID, NAME, CONSUMPTION_AMOUT, DISCOUNT, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectMembers" resultMap="BaseResultMap" parameterType="com.zjlp.face.shop.domain.Member" >
+    select 
+    <include refid="Base_Column_List" />
+    from member
+    where ADMIN_ID = #{adminId,jdbcType=BIGINT}
+    order by CREATE_TIME desc
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from member
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zjlp.face.shop.domain.Member" >
+  	<selectKey resultType="java.lang.Long" keyProperty="id">
+      	SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into member (ID, ADMIN_ID, NAME, 
+      CONSUMPTION_AMOUT, DISCOUNT, CREATE_TIME, 
+      UPDATE_TIME)
+    values (#{id,jdbcType=BIGINT}, #{adminId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+      #{consumptionAmout,jdbcType=BIGINT}, #{discount,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjlp.face.shop.domain.Member" >
+  	<selectKey resultType="java.lang.Long" keyProperty="id">
+      	SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="adminId != null" >
+        ADMIN_ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="consumptionAmout != null" >
+        CONSUMPTION_AMOUT,
+      </if>
+      <if test="discount != null" >
+        DISCOUNT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="consumptionAmout != null" >
+        #{consumptionAmout,jdbcType=BIGINT},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjlp.face.shop.domain.Member" >
+    update member
+    <set >
+      <if test="adminId != null" >
+        ADMIN_ID = #{adminId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="consumptionAmout != null" >
+        CONSUMPTION_AMOUT = #{consumptionAmout,jdbcType=BIGINT},
+      </if>
+      <if test="discount != null" >
+        DISCOUNT = #{discount,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjlp.face.shop.domain.Member" >
+    update member
+    set ADMIN_ID = #{adminId,jdbcType=BIGINT},
+      NAME = #{name,jdbcType=VARCHAR},
+      CONSUMPTION_AMOUT = #{consumptionAmout,jdbcType=BIGINT},
+      DISCOUNT = #{discount,jdbcType=INTEGER},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

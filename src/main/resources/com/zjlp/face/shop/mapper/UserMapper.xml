@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjlp.face.shop.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.zjlp.face.shop.domain.User">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="SOURCE" jdbcType="INTEGER" property="source" />
+    <result column="MY_INVITATION_CODE" jdbcType="VARCHAR" property="myInvitationCode" />
+    <result column="NICKNAME" jdbcType="VARCHAR" property="nickname" />
+    <result column="OPEN_ID" jdbcType="VARCHAR" property="openId" />
+    <result column="FAKE_ID" jdbcType="VARCHAR" property="fakeId" />
+    <result column="TOKEN" jdbcType="VARCHAR" property="token" />
+    <result column="LOGIN_ACCOUNT" jdbcType="VARCHAR" property="loginAccount" />
+    <result column="PASSWD" jdbcType="VARCHAR" property="passwd" />
+    <result column="TYPE" jdbcType="INTEGER" property="type" />
+    <result column="SEX" jdbcType="INTEGER" property="sex" />
+    <result column="INVITATION_CODE" jdbcType="VARCHAR" property="invitationCode" />
+    <result column="LANGUAGE" jdbcType="VARCHAR" property="language" />
+    <result column="HEADIMGURL" jdbcType="VARCHAR" property="headimgurl" />
+    <result column="SUBSCRIBE_TIME" jdbcType="TIMESTAMP" property="subscribeTime" />
+    <result column="PHONE" jdbcType="VARCHAR" property="phone" />
+    <result column="IDENTITY" jdbcType="VARCHAR" property="identity" />
+    <result column="CONTACTS" jdbcType="VARCHAR" property="contacts" />
+    <result column="AREA_CODE" jdbcType="INTEGER" property="areaCode" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="STATUS" jdbcType="INTEGER" property="status" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap id="BaseResultMapDto" type="com.zjlp.face.shop.dto.UserDto" extends="BaseResultMap">
+  	<result column="Area_Description" jdbcType="VARCHAR" property="areaDescription" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, SOURCE, MY_INVITATION_CODE, NICKNAME, OPEN_ID, FAKE_ID, TOKEN, LOGIN_ACCOUNT, 
+    PASSWD, TYPE, SEX, INVITATION_CODE, LANGUAGE, HEADIMGURL, SUBSCRIBE_TIME, PHONE, 
+    IDENTITY, CONTACTS, AREA_CODE, ADDRESS, STATUS, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectList" parameterType="java.util.Map" resultMap="BaseResultMapDto">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    <where>
+		<if test="dto.loginAccount != null">
+			and LOGIN_ACCOUNT = #{dto.loginAccount,jdbcType=VARCHAR}
+		</if>
+		<if test="dto.phone != null">
+			and PHONE = #{dto.phone,jdbcType=VARCHAR}
+		</if>
+		<if test="dto.contacts != null">
+			and CONTACTS = #{dto.contacts,jdbcType=VARCHAR}
+		</if>
+		and status = #{dto.status,jdbcType=INTEGER}
+	</where> 
+	order by UPDATE_TIME desc
+	Limit #{start},#{pageSize}
+  </select>
+  <select id="getCount" parameterType="com.zjlp.face.shop.dto.UserDto" resultType="java.lang.Integer">
+    select 
+    count(ID)
+    from user 
+    <where> 
+		<if test="loginAccount != null">
+			and LOGIN_ACCOUNT = #{loginAccount,jdbcType=VARCHAR}
+		</if>
+		<if test="phone != null">
+			and PHONE = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="contacts != null">
+			and CONTACTS = #{contacts,jdbcType=VARCHAR}
+		</if>
+		and status = #{status,jdbcType=INTEGER}
+	</where>
+  </select>
+  <select id="getUser" parameterType="com.zjlp.face.shop.domain.User" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    <where> 
+		<if test="loginAccount != null">
+			and LOGIN_ACCOUNT = #{loginAccount,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			and status = #{status,jdbcType=INTEGER}
+		</if>
+	</where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.zjlp.face.shop.domain.User">
+    insert into user (ID, SOURCE, MY_INVITATION_CODE, 
+      NICKNAME, OPEN_ID, FAKE_ID, 
+      TOKEN, LOGIN_ACCOUNT, PASSWD, 
+      TYPE, SEX, INVITATION_CODE, 
+      LANGUAGE, HEADIMGURL, SUBSCRIBE_TIME, 
+      PHONE, IDENTITY, CONTACTS, 
+      AREA_CODE, ADDRESS, STATUS, 
+      CREATE_TIME, UPDATE_TIME)
+    values (#{id,jdbcType=BIGINT}, #{source,jdbcType=INTEGER}, #{myInvitationCode,jdbcType=VARCHAR}, 
+      #{nickname,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR}, #{fakeId,jdbcType=VARCHAR}, 
+      #{token,jdbcType=VARCHAR}, #{loginAccount,jdbcType=VARCHAR}, #{passwd,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{sex,jdbcType=INTEGER}, #{invitationCode,jdbcType=VARCHAR}, 
+      #{language,jdbcType=VARCHAR}, #{headimgurl,jdbcType=VARCHAR}, #{subscribeTime,jdbcType=TIMESTAMP}, 
+      #{phone,jdbcType=VARCHAR}, #{identity,jdbcType=VARCHAR}, #{contacts,jdbcType=VARCHAR}, 
+      #{areaCode,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjlp.face.shop.domain.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="source != null">
+        SOURCE,
+      </if>
+      <if test="myInvitationCode != null">
+        MY_INVITATION_CODE,
+      </if>
+      <if test="nickname != null">
+        NICKNAME,
+      </if>
+      <if test="openId != null">
+        OPEN_ID,
+      </if>
+      <if test="fakeId != null">
+        FAKE_ID,
+      </if>
+      <if test="token != null">
+        TOKEN,
+      </if>
+      <if test="loginAccount != null">
+        LOGIN_ACCOUNT,
+      </if>
+      <if test="passwd != null">
+        PASSWD,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="sex != null">
+        SEX,
+      </if>
+      <if test="invitationCode != null">
+        INVITATION_CODE,
+      </if>
+      <if test="language != null">
+        LANGUAGE,
+      </if>
+      <if test="headimgurl != null">
+        HEADIMGURL,
+      </if>
+      <if test="subscribeTime != null">
+        SUBSCRIBE_TIME,
+      </if>
+      <if test="phone != null">
+        PHONE,
+      </if>
+      <if test="identity != null">
+        IDENTITY,
+      </if>
+      <if test="contacts != null">
+        CONTACTS,
+      </if>
+      <if test="areaCode != null">
+        AREA_CODE,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=INTEGER},
+      </if>
+      <if test="myInvitationCode != null">
+        #{myInvitationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null">
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="fakeId != null">
+        #{fakeId,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="loginAccount != null">
+        #{loginAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null">
+        #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="invitationCode != null">
+        #{invitationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null">
+        #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="subscribeTime != null">
+        #{subscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="identity != null">
+        #{identity,jdbcType=VARCHAR},
+      </if>
+      <if test="contacts != null">
+        #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null">
+        #{areaCode,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjlp.face.shop.domain.User">
+    update user
+    <set>
+      <if test="source != null">
+        SOURCE = #{source,jdbcType=INTEGER},
+      </if>
+      <if test="myInvitationCode != null">
+        MY_INVITATION_CODE = #{myInvitationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null">
+        NICKNAME = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null">
+        OPEN_ID = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="fakeId != null">
+        FAKE_ID = #{fakeId,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        TOKEN = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="loginAccount != null">
+        LOGIN_ACCOUNT = #{loginAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null">
+        PASSWD = #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        TYPE = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null">
+        SEX = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="invitationCode != null">
+        INVITATION_CODE = #{invitationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        LANGUAGE = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null">
+        HEADIMGURL = #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="subscribeTime != null">
+        SUBSCRIBE_TIME = #{subscribeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phone != null">
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="identity != null">
+        IDENTITY = #{identity,jdbcType=VARCHAR},
+      </if>
+      <if test="contacts != null">
+        CONTACTS = #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null">
+        AREA_CODE = #{areaCode,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjlp.face.shop.domain.User">
+    update user
+    set SOURCE = #{source,jdbcType=INTEGER},
+      MY_INVITATION_CODE = #{myInvitationCode,jdbcType=VARCHAR},
+      NICKNAME = #{nickname,jdbcType=VARCHAR},
+      OPEN_ID = #{openId,jdbcType=VARCHAR},
+      FAKE_ID = #{fakeId,jdbcType=VARCHAR},
+      TOKEN = #{token,jdbcType=VARCHAR},
+      LOGIN_ACCOUNT = #{loginAccount,jdbcType=VARCHAR},
+      PASSWD = #{passwd,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=INTEGER},
+      SEX = #{sex,jdbcType=INTEGER},
+      INVITATION_CODE = #{invitationCode,jdbcType=VARCHAR},
+      LANGUAGE = #{language,jdbcType=VARCHAR},
+      HEADIMGURL = #{headimgurl,jdbcType=VARCHAR},
+      SUBSCRIBE_TIME = #{subscribeTime,jdbcType=TIMESTAMP},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      IDENTITY = #{identity,jdbcType=VARCHAR},
+      CONTACTS = #{contacts,jdbcType=VARCHAR},
+      AREA_CODE = #{areaCode,jdbcType=INTEGER},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

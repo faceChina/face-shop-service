@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjlp.face.shop.mapper.ManagedAccountsShopReferenceMapper" >
+  <resultMap id="BaseResultMap" type="com.zjlp.face.shop.domain.ManagedAccountsShopReference" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="MANAGED_ACCOUNT_ID" property="managedAccountId" jdbcType="BIGINT" />
+    <result column="SHOP_NO" property="shopNo" jdbcType="VARCHAR" />
+    <result column="TYPE" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, MANAGED_ACCOUNT_ID, SHOP_NO, TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from managed_accounts_shop_reference
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from managed_accounts_shop_reference
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByShopNo" parameterType="java.lang.String" >
+    delete from managed_accounts_shop_reference
+    where SHOP_NO = #{shopNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zjlp.face.shop.domain.ManagedAccountsShopReference" >
+    <selectKey keyProperty="id" resultType="long" order="AFTER">  
+        SELECT LAST_INSERT_ID();  
+    </selectKey> 
+    insert into managed_accounts_shop_reference (ID, MANAGED_ACCOUNT_ID, SHOP_NO, 
+      TYPE)
+    values (#{id,jdbcType=BIGINT}, #{managedAccountId,jdbcType=BIGINT}, #{shopNo,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zjlp.face.shop.domain.ManagedAccountsShopReference" >
+    <selectKey keyProperty="id" resultType="long" order="AFTER">  
+        SELECT LAST_INSERT_ID();  
+    </selectKey> 
+    insert into managed_accounts_shop_reference
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="managedAccountId != null" >
+        MANAGED_ACCOUNT_ID,
+      </if>
+      <if test="shopNo != null" >
+        SHOP_NO,
+      </if>
+      <if test="type != null" >
+        TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="managedAccountId != null" >
+        #{managedAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="shopNo != null" >
+        #{shopNo,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zjlp.face.shop.domain.ManagedAccountsShopReference" >
+    update managed_accounts_shop_reference
+    <set >
+      <if test="managedAccountId != null" >
+        MANAGED_ACCOUNT_ID = #{managedAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="shopNo != null" >
+        SHOP_NO = #{shopNo,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zjlp.face.shop.domain.ManagedAccountsShopReference" >
+    update managed_accounts_shop_reference
+    set MANAGED_ACCOUNT_ID = #{managedAccountId,jdbcType=BIGINT},
+      SHOP_NO = #{shopNo,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <delete id="deleteBymanagedAccountId" parameterType="java.lang.Long" >
+    delete from managed_accounts_shop_reference
+    where MANAGED_ACCOUNT_ID = #{managedAccountId,jdbcType=BIGINT}
+  </delete>
+</mapper>
